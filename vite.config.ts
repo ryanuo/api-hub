@@ -1,13 +1,20 @@
-import { cloudflare } from '@cloudflare/vite-plugin'
-import build from '@hono/vite-build/cloudflare-workers'
+import devServer from '@hono/vite-dev-server'
 import { defineConfig } from 'vite'
 import ssrHotReload from 'vite-plugin-ssr-hot-reload'
 
 export default defineConfig(({ command, isSsrBuild }) => {
-  console.log(command)
   if (command === 'serve') {
-    return { plugins: [ssrHotReload(), cloudflare()] }
+    return {
+      server: {
+        port: 5148,
+        host: true,
+      },
+      plugins: [ssrHotReload(), devServer({
+        entry: 'src/index.tsx',
+      })],
+    }
   }
+
   if (!isSsrBuild) {
     return {
       build: {
@@ -23,11 +30,17 @@ export default defineConfig(({ command, isSsrBuild }) => {
             },
           },
         },
-
       },
     }
   }
+
   return {
-    plugins: [build({ outputDir: 'dist-server' })],
+    build: {
+      ssr: true,
+      outDir: 'dist-server',
+      rollupOptions: {
+        input: 'index.js', // 指定服务器入口文件
+      },
+    },
   }
 })

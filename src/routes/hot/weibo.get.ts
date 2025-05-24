@@ -12,7 +12,7 @@ export async function handleRoute() {
     link: 'https://s.weibo.com/top/summary/',
     total: list?.length || 0,
     ...result,
-    data: list.map((v: any) => {
+    data: list.map((v: WeiboData) => {
       const key = v.word_scheme ? v.word_scheme : `#${v.word}`
       return {
         id: v.mid,

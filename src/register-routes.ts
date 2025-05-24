@@ -6,7 +6,7 @@ import type { Hono } from 'hono'
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS' | 'HEAD'
 
 // 扫描所有路由文件
-const routeFiles = import.meta.glob('./routes/**/*.{get,post,put,delete,patch,options,head}.ts', {
+export const routeFiles = import.meta.glob('./routes/**/*.{get,post,put,delete,patch,options,head}.ts', {
   eager: true,
 })
 
@@ -29,6 +29,7 @@ function extractRouteInfo(filePath: string) {
 
 // 注册所有路由
 export function registerRoutes(app: Hono) {
+  const routesList: string[] = []
   Object.entries(routeFiles).forEach(([filePath, module]: [string, any]) => {
     const routeInfo = extractRouteInfo(filePath)
 
@@ -38,6 +39,7 @@ export function registerRoutes(app: Hono) {
     }
 
     const { routePath, method } = routeInfo
+    routesList.push(routePath)
     const handler = module?.default || module?.handleRoute
 
     if (typeof handler !== 'function') {
@@ -55,7 +57,8 @@ export function registerRoutes(app: Hono) {
         return c.text('Internal Server Error', 500)
       }
     })
-
-    console.log(`✅ 注册路由: ${method} ${routePath}`)
   })
+
+  console.log(`✅ 路由注册完成，共 ${routesList.length} 个路由`)
+  console.table(routesList)
 }
