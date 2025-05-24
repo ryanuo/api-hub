@@ -5,13 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && vite build --ssr",
-    "preview": "pnpm run build && wrangler dev dist-server/index.js",
-    "deploy": "pnpm run build && wrangler deploy dist-server/index.js",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "routes": "esno scripts/generate-routes.ts"
-  },
-  "dependencies": {
-    "hono": "^4.7.10"
+    "preview": "vite preview"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.13.2",
@@ -23,9 +17,8 @@
     "eslint-plugin-format": "^1.0.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
-    "esno": "^4.8.0",
+    "hono": "^4.7.10",
     "typescript": "^5.8.3",
-    "vite": "^6.1.1",
-    "vite-plugin-ssr-hot-reload": "^0.4.1"
+    "vite": "^6.1.1"
   }
 }
